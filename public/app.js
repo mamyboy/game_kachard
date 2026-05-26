@@ -1,3 +1,19 @@
+if (typeof io === 'undefined') {
+  const roleScreen = document.getElementById('role-screen');
+  if (roleScreen) {
+    roleScreen.innerHTML = `
+      <h1>Spinner Battle</h1>
+      <p class="subtitle">ไม่สามารถเชื่อมต่อระบบ Realtime ได้</p>
+      <p class="error-text" style="min-height:auto; margin-top:12px;">
+        พบว่า Socket.IO client ไม่ถูกโหลด หรือ backend ไม่พร้อมใช้งานบนโฮสต์นี้<br/>
+        หากใช้ Vercel ให้รันเซิร์ฟเวอร์บน Render/Railway/Fly.io แล้วชี้หน้าเว็บไปยังเซิร์ฟเวอร์นั้น
+      </p>
+    `;
+  }
+
+  throw new Error('Socket.IO client is unavailable.');
+}
+
 const socket = io();
 
 const TAU = Math.PI * 2;

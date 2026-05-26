@@ -14,7 +14,18 @@ if (typeof io === 'undefined') {
   throw new Error('Socket.IO client is unavailable.');
 }
 
-const socket = io();
+function createNoopSocket() {
+  return {
+    emit() {},
+    on() {},
+  };
+}
+
+const configuredSocketUrl = String(window.GAME_CONFIG?.socketServerUrl || '').trim();
+const isVercelHost = window.location.hostname.endsWith('vercel.app');
+const socketBaseUrl = configuredSocketUrl || (!isVercelHost ? window.location.origin : '');
+
+const socket = socketBaseUrl ? io(socketBaseUrl) : createNoopSocket();
 
 const TAU = Math.PI * 2;
 const palette = [
@@ -62,6 +73,27 @@ const state = {
   rotation: 0,
   animating: false,
 };
+
+function showRealtimeUnavailableMessage() {
+  const roleScreen = document.getElementById('role-screen');
+  if (!roleScreen) {
+    return;
+  }
+
+  roleScreen.innerHTML = `
+    <h1>Spinner Battle</h1>
+    <p class="subtitle">ยังไม่ได้ตั้งค่า Realtime Server</p>
+    <p class="error-text" style="min-height:auto; margin-top:12px;">
+      บน Vercel ต้องใช้ Socket backend แยกต่างหาก<br/>
+      กรุณาเปิดไฟล์ <strong>public/config.js</strong> แล้วใส่ <strong>socketServerUrl</strong><br/>
+      ตัวอย่าง: https://your-backend.onrender.com
+    </p>
+  `;
+}
+
+if (!socketBaseUrl) {
+  showRealtimeUnavailableMessage();
+}
 
 function setVisible(el, show) {
   el.classList.toggle('hidden', !show);
@@ -286,6 +318,14 @@ socket.on('hostDisconnected', () => {
 
 socket.on('controllerDisconnected', () => {
   displayStatus.textContent = 'Controller หลุดการเชื่อมต่อ';
+});
+
+socket.on('connect_error', () => {
+  if (state.role) {
+    return;
+  }
+
+  showRealtimeUnavailableMessage();
 });
 
 drawWheel(state.entries, state.rotation);

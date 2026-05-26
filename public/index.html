@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spinner Party Game</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&family=Sriracha&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="bg-shape shape-a"></div>
+    <div class="bg-shape shape-b"></div>
+
+    <main class="app-shell">
+      <section id="role-screen" class="panel role-panel">
+        <h1>Spinner Battle</h1>
+        <p class="subtitle">เข้า URL เดียวกัน แล้วเลือกบทบาท</p>
+
+        <div class="role-buttons">
+          <button id="btn-display" class="btn big">จอแสดงผล</button>
+          <button id="btn-controller" class="btn big alt">iPad Controller</button>
+        </div>
+
+        <div id="join-form" class="join-form hidden">
+          <label for="room-input">รหัสเกม 4 ตัว</label>
+          <input id="room-input" maxlength="4" placeholder="เช่น A7K2" />
+          <button id="btn-join" class="btn">เข้าควบคุม</button>
+        </div>
+        <p id="join-error" class="error-text"></p>
+      </section>
+
+      <section id="display-screen" class="panel game-panel hidden">
+        <div class="top-row">
+          <div>
+            <div class="label">รหัสเกม</div>
+            <div id="display-room-code" class="room-code">----</div>
+          </div>
+          <div id="display-status" class="status-badge">รอ Controller</div>
+        </div>
+
+        <div class="wheel-wrap">
+          <canvas id="wheel-canvas" width="520" height="520" aria-label="Spinner wheel"></canvas>
+          <div class="pointer"></div>
+        </div>
+
+        <div id="result-banner" class="result-banner hidden"></div>
+      </section>
+
+      <section id="controller-screen" class="panel controller-panel hidden">
+        <div class="top-row compact">
+          <div>
+            <div class="label">ควบคุมเกม</div>
+            <div id="controller-room-code" class="room-code">----</div>
+          </div>
+          <div id="controller-status" class="status-badge">พร้อมเล่น</div>
+        </div>
+
+        <label for="entries-input" class="label spacing">ข้อมูลในวงล้อ (1 บรรทัด = 1 ช่อง)</label>
+        <textarea id="entries-input" rows="8"></textarea>
+
+        <div class="controller-actions">
+          <button id="btn-apply" class="btn">อัปเดตวงล้อ</button>
+          <button id="btn-spin" class="btn accent">หมุนเลย!</button>
+          <button id="btn-next" class="btn ghost">รอบใหม่</button>
+        </div>
+
+        <p id="controller-message" class="hint"></p>
+      </section>
+    </main>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/app.js"></script>
+  </body>
+</html>

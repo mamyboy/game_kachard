@@ -219,6 +219,10 @@ io.on('connection', (socket) => {
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.get('/health', (_req, res) => {
+  res.status(200).json({ ok: true });
+});
+
 server.listen(PORT, () => {
   console.log(`Spinner game server running on http://localhost:${PORT}`);
 });
